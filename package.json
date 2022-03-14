@@ -1,8 +1,10 @@
 {
   "name": "clitodo",
+  "description": "A simple cli todo app with unnecessary features",
+  "version": "0.0.1",
+  "author": "Matan Peretz",
+  "license": "ISC",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "bin": {
     "clitodo": "./index.js"
@@ -10,8 +12,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "commander": "^9.0.0",
     "inquirer": "^8.2.1",
