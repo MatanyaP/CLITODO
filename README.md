@@ -21,7 +21,31 @@ npm install
 ## Usage
 
 ```sh
-npm install -g . -> clitodo
+To install globally in your system:
+npm install -g .
+Then run the app:
+clitodo
+will open the help menu
+
+Usage: clitodo [options] [command]
+
+CLI Notes
+
+Options:
+  -V, --version            output the version number
+  -i, --id [ids]           Mark a note as done by ids
+  -d, --dueDate            Add with due date
+  -s, --sort               Sort by due date
+  -a, --archived           Show archived notes
+  -h, --help               display help for command
+
+Commands:
+  list|l [options]         List all notes
+  add|a [options] [title]  Add a note
+  done|d [ids...]          Mark a note as done
+  allDone|ad               Mark all notes as done
+  openMenu|om              Open menu
+  help [command]           display help for command
 ```
 
 ## Run tests
@@ -39,6 +63,3 @@ npm run test
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
