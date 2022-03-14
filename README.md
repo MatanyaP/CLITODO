@@ -63,3 +63,11 @@ npm run test
 ## Show your support
 
 Give a ⭐️ if this project helped you!
+
+# Roadmap:
+- text to speech
+- export to html
+- export to sprite
+- today
+- email notifications
+- and many more unnecessary features to make you life more complicated
