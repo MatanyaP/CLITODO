@@ -1,8 +1,5 @@
 <h1 align="center">Welcome to clitodo 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/clitodo" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/clitodo.svg">
-  </a>
   <a href="#" target="_blank">
     <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
   </a>
