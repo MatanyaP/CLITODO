@@ -48,6 +48,10 @@ const options = program.opts()
 
 // program methods
 const openMenu = async () => {
+    if(notesList.encryptedData) {
+        term.bold.red('Encrypted notes, please decrypt first\n')
+        return
+    }
     console.clear();
     let items = sortedNotesByDueDate(notesList)
     items = R.values(items)
@@ -95,6 +99,10 @@ const openMenu = async () => {
 }
 
 const list = async () => {
+    if(notesList.encryptedData) {
+        term.bold.red('Encrypted notes, please decrypt first\n')
+        return
+    }
     console.clear();
     // if option sortByDueDate is true, sort by due date
     if (options.archived) {
@@ -143,6 +151,10 @@ const list = async () => {
 }
 
 const add = async (addtitle) => {
+    if(notesList.encryptedData) {
+        term.bold.red('Encrypted notes, please decrypt first\n')
+        return
+    }
     term.clear();
     const title = addtitle ? addtitle : await promptQuestion('\nEnter title: ')
     if(!title) {
@@ -178,6 +190,10 @@ const add = async (addtitle) => {
 }
 
 const done = async (ids) => {
+    if(notesList.encryptedData) {
+        term.bold.red('Encrypted notes, please decrypt first\n')
+        return
+    }
     console.clear();
     const res = ids.length > 0 ? ids : await promptQuestion('Enter note(s) id(s): ')
     if(!res) {
@@ -203,6 +219,10 @@ const done = async (ids) => {
 
 
 const allDone = () => {
+    if(notesList.encryptedData) {
+        term.bold.red('Encrypted notes, please decrypt first\n')
+        return
+    }
     term.clear();
     promptConfirm('\nMark all notes as done?').then(answer => {
         if (answer) {
@@ -243,16 +263,21 @@ const decryptList = async () => {
         term.processExit()
         return
     }
-    const decrypted = decrypt(notesList, key);
-    if (!decrypted) {
-        term.brightRed('\nCould not decrypt notes.')
+    try {
+        const decrypted = decrypt(notesList, key);
+        notesList = JSON.parse(decrypted)
+        writeFile(notesList)
+        term.brightGreen('\nNotes decrypted.\n');
+        // wait one second before showing list
+        setTimeout(() => {
+            list()
+        }, 1000)
+        return;
+    } catch (e) {
+        term.brightRed('\nCould not decrypt notes.');
         term.processExit()
-        return
+        return;
     }
-    notesList = JSON.parse(decrypted)
-    writeFile(notesList)
-    term.brightGreen('\nNotes decrypted.\n');
-    return;
 }
 
 
