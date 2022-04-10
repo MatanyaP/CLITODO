@@ -1,8 +1,5 @@
 <h1 align="center">Welcome to clitodo 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/clitodo" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/clitodo.svg">
-  </a>
   <a href="#" target="_blank">
     <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
   </a>
@@ -63,3 +60,11 @@ npm run test
 ## Show your support
 
 Give a ⭐️ if this project helped you!
+
+# Roadmap:
+- text to speech
+- export to html
+- export to sprite
+- today
+- email notifications
+- and many more unnecessary features to make you life more complicated
