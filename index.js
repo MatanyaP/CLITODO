@@ -2,6 +2,7 @@
 
 // import all functions from utils
 import {
+    chooseFilePath,
     findNotesByIds,
     archiveAll,
     table,
@@ -18,6 +19,8 @@ import * as R from 'ramda'
 import * as fs from 'fs'
 import { Command } from 'commander';
 import { createRequire } from 'module';
+import crypto from 'crypto'
+import {encrypt, decrypt, getKey} from './utils/encryption.js'
 const require = createRequire(import.meta.url);
 const termkit = require( 'terminal-kit' ) ;
 const term = termkit.terminal ;
@@ -136,7 +139,6 @@ const list = async () => {
     term.brightBlack('\n\n');
     const quote = await getQuote();
     term.brightBlack(term.italic(`"${quote.text}"\n\n- ${quote.author}\n\n`));
-
     promptConfirm('Add a note?').then(answer => answer ? add() : term.processExit())
 }
 
@@ -158,18 +160,21 @@ const add = async (addtitle) => {
     const note = {
         id: notesList.length + 1,
         title,
-        _dueDate,
+        dueDate:_dueDate,
         archived: false,
         createdAt: new Date().toISOString(),
     }
     notesList.push(note)
     writeFile(notesList)
-    term.brightGreen(`\nNote "${note.title}" added`)
+    if (note.dueDate) {
+        term.bold.green(`\nReminder added: ${note.title} [due: ${note.dueDate}]\n`);
+    } else {
+        term.bold.green(`\nNote added: ${note.title}\n`);
+    }
     // wait one second before showing list
     setTimeout(() => {
         list()
-    }, 1000)
-        
+    }, 1000) 
 }
 
 const done = async (ids) => {
@@ -190,6 +195,10 @@ const done = async (ids) => {
     term.brightGreen(`\nMarking ${notes.length} note(s) as archived\n`)
     archiveAll(notes)
     writeFile(notesList);
+    // wait one second before showing list
+    setTimeout(() => {
+        list()
+    }, 1000)
 }
 
 
@@ -207,6 +216,47 @@ const allDone = () => {
         return
     })
 }
+
+const encryptList = async () => {
+    term.clear();
+    const key = await getKey()
+    if (!key) {
+        term.brightRed('\nNo key entered.')
+        term.processExit()
+        return
+    }
+    term.red(`you need to save this key to decrypt your list later:\n` );
+    term.green(key.key.toString('hex'));
+    const encrypted = encrypt(JSON.stringify(notesList), key.key, key.iv);
+    notesList = encrypted
+    writeFile(notesList)
+    term.brightGreen('\nNotes encrypted.\n');
+    return;
+}
+
+const decryptList = async () => {
+    term.clear();
+    // prompt for key
+    const key = await promptQuestion('\nEnter key: ')
+    if (!key) {
+        term.brightRed('\nNo key entered.')
+        term.processExit()
+        return
+    }
+    const decrypted = decrypt(notesList, key);
+    if (!decrypted) {
+        term.brightRed('\nCould not decrypt notes.')
+        term.processExit()
+        return
+    }
+    notesList = JSON.parse(decrypted)
+    writeFile(notesList)
+    term.brightGreen('\nNotes decrypted.\n');
+    return;
+}
+
+
+
 
 // program definition
 program
@@ -248,6 +298,18 @@ program
     .alias('om')
     .description('Open menu')
     .action(openMenu)
+
+program
+    .command('encryptList')
+    .alias('el')
+    .description('Encrypt list of notes to file')
+    .action(encryptList)
+
+program
+    .command('decryptList')
+    .alias('dl')
+    .description('Decrypt list of notes from file')
+    .action(decryptList)
 
 program
     .option('-i, --id [ids]' , 'Mark a note as done by ids')

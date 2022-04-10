@@ -9,6 +9,27 @@ inquirer.registerPrompt('datetime', require('inquirer-datepicker-prompt'))
 
 // general functions
 
+const drawImage = (image) => {
+    term.drawImage(image, {
+        shrink: { width: 80, height: 80 }
+    }).catch(err => {
+        console.log(err)
+    })
+}
+
+const chooseFilePath = async () => {
+    const { filePath } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'filePath',
+            message: 'Enter the path to the file you want to encrypt:',
+            validate: function (value) {
+                return value.length ? true : 'Please enter a valid path';
+            }
+        }
+    ])
+    return filePath
+}
 
 const findNotesByIds = (ids, data) => {
     const res = ids.map(id => {
@@ -138,6 +159,8 @@ const archivedNotesByDueDate = R.compose(
 )
 
 export {
+    chooseFilePath,
+    drawImage,
     findNotesByIds,
     archiveAll,
     table,
