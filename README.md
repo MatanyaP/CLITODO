@@ -62,7 +62,7 @@ npm run test
 Give a ⭐️ if this project helped you!
 
 # Roadmap:
-- ~~ ~~encrypt notes with a key
+- ~~ ~~encrypt notes with a key~~ ~~
 - text to speech
 - export to html
 - export to sprite
