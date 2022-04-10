@@ -42,6 +42,8 @@ Commands:
   done|d [ids...]          Mark a note as done
   allDone|ad               Mark all notes as done
   openMenu|om              Open menu
+  encryptList|el           Encrypt list of notes to file
+  decryptList|dl           Decrypt list of notes from file
   help [command]           display help for command
 ```
 
