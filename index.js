@@ -2,6 +2,7 @@
 
 // import all functions from utils
 import {
+    jsonToHTML,
     sayText,
     stopText,
     findNotesByIds,
@@ -302,6 +303,34 @@ const sayList = async () => {
     await promptConfirm('\nStop speaking?').then(answer => answer ? stopText() : null)
 }
 
+const saveHtml = async () => {
+    term.clear();
+    const res = await promptConfirm('\nSave list as HTML?')
+    if (res) {
+        const html = jsonToHTML(notesList);
+        const file = await promptQuestion('\nEnter file name: ')
+        if (!file) {
+            term.brightRed('\nNo file name entered.')
+            term.processExit()
+            return
+        }
+        // create folder HTML_files if it doesn't exist
+        if (!fs.existsSync('./HTML_files')) {
+            fs.mkdirSync('./HTML_files');
+        }
+        fs.writeFile(`./HTML_files/${file}.html`, html, (err) => {
+            if (err) {
+                term.brightRed('\nCould not save file.');
+                term.processExit()
+                return;
+            }
+            term.brightGreen(`\nFile saved to ${process.cwd()}\\HTML_files\\${file}.html\n`);
+        })
+    } else {
+        term.brightRed('\nNo file saved.\n');
+    }
+}
+
 
 
 // program definition
@@ -362,6 +391,12 @@ program
     .alias('sl')
     .description('Say list of notes')
     .action(sayList)
+
+program
+    .command('saveHtml')
+    .alias('sh')
+    .description('Save list as HTML')
+    .action(saveHtml)
 
 program
     .option('-i, --id [ids]' , 'Mark a note as done by ids')

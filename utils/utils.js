@@ -10,34 +10,32 @@ const say = require('say');
 
 // general functions
 
-const flattenObj = (ob) => {
- 
-    // The object which contains the
-    // final result
-    let result = {};
- 
-    // loop through the object "ob"
-    for (const i in ob) {
- 
-        // We check the type of the i using
-        // typeof() function and recursively
-        // call the function again
-        if ((typeof ob[i]) === 'object' && !Array.isArray(ob[i])) {
-            const temp = flattenObj(ob[i]);
-            for (const j in temp) {
- 
-                // Store temp in result
-                result[i + '.' + j] = temp[j];
-            }
-        }
- 
-        // Else store ob[i] in result directly
-        else {
-            result[i] = ob[i];
-        }
-    }
-    return result;
-};
+const jsonToHTML = (json) => {
+    const columns = [];
+for (let name in json[0]){
+  if(!json[0].hasOwnProperty(name)) continue;
+  columns.push(name);
+}
+
+let html = '<html><body><table><thead><tr>';
+
+for (let item of columns) {
+  html += '<th>' + item + '</th>';
+}
+
+html += '</tr></thead><tbody>';
+
+for (let item of json) {
+  html += '<tr>';
+  for (let name of columns) {
+    html += '<td>' + item[name] +'</td>';
+  }
+  html += '</tr>';
+}
+
+html += '</tbody></table></body></html>';
+return html;
+}
 
 const sayText = async (text, callback) => {
     say.speak(text)
@@ -213,7 +211,7 @@ const sortedNotesToday = R.compose(
 )
 
 export {
-    flattenObj,
+    jsonToHTML,
     sayText,
     stopText,
     chooseFilePath,

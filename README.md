@@ -44,6 +44,7 @@ Commands:
   encryptList|el           Encrypt list of notes to file
   decryptList|dl           Decrypt list of notes from file
   sayList|sl               Say list of notes
+  saveHtml|sh              Save list as HTML
   help [command]           display help for command
 ```
 
@@ -66,7 +67,7 @@ Give a ⭐️ if this project helped you!
 # Roadmap:
 - ~~encrypt notes with a key~~
 - ~~text to speech~~
-- export to html
+- ~~export to html~~
 - export to sprite
 - today
 - email notifications
