@@ -12,17 +12,16 @@
 ## Install
 
 ```sh
-npm install
+To install globally in your system:
+npm install -g .
 ```
 
 ## Usage
 
 ```sh
-To install globally in your system:
-npm install -g .
-Then run the app:
+To run the app type:
 clitodo
-will open the help menu
+which will open the help menu
 
 Usage: clitodo [options] [command]
 
