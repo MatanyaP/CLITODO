@@ -6,8 +6,49 @@ const termkit = require( 'terminal-kit' ) ;
 const term = termkit.terminal ;
 const inquirer = require('inquirer');
 inquirer.registerPrompt('datetime', require('inquirer-datepicker-prompt'))
+const say = require('say');
 
 // general functions
+
+const flattenObj = (ob) => {
+ 
+    // The object which contains the
+    // final result
+    let result = {};
+ 
+    // loop through the object "ob"
+    for (const i in ob) {
+ 
+        // We check the type of the i using
+        // typeof() function and recursively
+        // call the function again
+        if ((typeof ob[i]) === 'object' && !Array.isArray(ob[i])) {
+            const temp = flattenObj(ob[i]);
+            for (const j in temp) {
+ 
+                // Store temp in result
+                result[i + '.' + j] = temp[j];
+            }
+        }
+ 
+        // Else store ob[i] in result directly
+        else {
+            result[i] = ob[i];
+        }
+    }
+    return result;
+};
+
+const sayText = async (text, callback) => {
+    say.speak(text)
+    if (callback) {
+        callback()
+    }
+}
+
+const stopText = () => {
+    say.stop()
+}
 
 const drawImage = (image) => {
     term.drawImage(image, {
@@ -124,6 +165,12 @@ const getQuote = async () => {
 // filtering and sorting functions
 const filterNotes = R.filter(R.propEq('archived', false));
 
+const filterNotesToday = R.filter(note => {
+    const today = new Date()
+    const dueDate = new Date(note.dueDate)
+    return dueDate.getDate() === today.getDate() && dueDate.getMonth() === today.getMonth() && dueDate.getFullYear() === today.getFullYear()
+})
+
 const archivedNotes = R.filter(R.propEq('archived', true));
 
 const sortByCreatedAt = R.sortBy(R.prop('createdAt'));
@@ -158,7 +205,17 @@ const archivedNotesByDueDate = R.compose(
     archivedNotes
 )
 
+const sortedNotesToday = R.compose(
+    filterByType,
+    importantFields,
+    sortByCreatedAtDescending,
+    filterNotesToday
+)
+
 export {
+    flattenObj,
+    sayText,
+    stopText,
     chooseFilePath,
     drawImage,
     findNotesByIds,
@@ -171,5 +228,6 @@ export {
     archivedNotes,
     sortedNotes,
     sortedNotesByDueDate,
-    archivedNotesByDueDate
+    archivedNotesByDueDate,
+    sortedNotesToday
 }

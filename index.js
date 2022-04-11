@@ -2,7 +2,8 @@
 
 // import all functions from utils
 import {
-    chooseFilePath,
+    sayText,
+    stopText,
     findNotesByIds,
     archiveAll,
     table,
@@ -13,7 +14,8 @@ import {
     archivedNotes,
     sortedNotes,
     sortedNotesByDueDate,
-    archivedNotesByDueDate
+    archivedNotesByDueDate,
+    sortedNotesToday
 } from './utils/utils.js'
 import * as R from 'ramda'
 import * as fs from 'fs'
@@ -280,6 +282,25 @@ const decryptList = async () => {
     }
 }
 
+const sayList = async () => {
+    term.clear();
+    const res = await promptConfirm('\nRead today\'s notes?')
+    if (res) {
+        const reminders = sortedNotesToday(notesList);
+        const notes = notesList.filter(note => !note.archived && !note.dueDate);
+        const notesAndReminders = reminders.reminders.concat(notes);
+        if (notesAndReminders.length > 0) {
+            const text = notesAndReminders.map(note => `${note.title}`).join('\n')
+            term.green(`\n${text}\n`);
+            sayText(text);
+        } else {
+            term.brightRed('\nNo notes to say.\n');
+        }
+    } else {
+        term.brightRed('\nNo notes said.\n');
+    }
+    await promptConfirm('\nStop speaking?').then(answer => answer ? stopText() : null)
+}
 
 
 
@@ -335,6 +356,12 @@ program
     .alias('dl')
     .description('Decrypt list of notes from file')
     .action(decryptList)
+
+program
+    .command('sayList')
+    .alias('sl')
+    .description('Say list of notes')
+    .action(sayList)
 
 program
     .option('-i, --id [ids]' , 'Mark a note as done by ids')
