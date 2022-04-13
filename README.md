@@ -33,6 +33,7 @@ Options:
   -d, --dueDate            Add with due date
   -s, --sort               Sort by due date
   -a, --archived           Show archived notes
+  -t, --today              Show today\'s notes
   -h, --help               display help for command
 
 Commands:
