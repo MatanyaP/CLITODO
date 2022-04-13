@@ -1,2 +1,4 @@
 # ignore node modules
 node_modules/
+# all png files
+*.png

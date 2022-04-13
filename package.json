@@ -16,10 +16,12 @@
     "commander": "^9.0.0",
     "inquirer": "^8.2.1",
     "inquirer-datepicker-prompt": "^0.4.2",
+    "jimp": "^0.16.1",
     "node-fetch": "^3.2.2",
     "ramda": "^0.28.0",
     "readline-sync": "^1.4.10",
     "say": "^0.16.0",
+    "terminal-image": "^2.0.0",
     "terminal-kit": "^2.4.0"
   },
   "devDependencies": {

@@ -2,6 +2,7 @@
 
 // import all functions from utils
 import {
+    jsonToSprite,
     jsonToHTML,
     sayText,
     stopText,
@@ -107,6 +108,17 @@ const list = async () => {
         return
     }
     console.clear();
+
+    if(options.today) {
+        const today = sortedNotesToday(notesList)
+        if(!today.reminders) {
+            term.bold.red('\nNo notes today\n')
+            return
+        }
+        term.bold.green('\nToday\'s notes:\n')
+        table(today.reminders)
+        return
+    }
     // if option sortByDueDate is true, sort by due date
     if (options.archived) {
         if (archivedNotes(notesList)) {
@@ -331,6 +343,23 @@ const saveHtml = async () => {
     }
 }
 
+const spriteList = async () => {
+    term.clear();
+    const res = await promptConfirm('\nCreate sprite?')
+    if (res) {
+        // noteslist to text
+        let index = 0;
+        const notes = notesList.filter(note => !note.archived);
+        const text = notes.map(note => {
+            index++;
+            return `${index}. ${note.title}`
+        }).join('\n')
+        jsonToSprite(text);
+    } else {
+        term.brightRed('\nNo sprite created.\n');
+    }
+}
+
 
 
 // program definition
@@ -346,6 +375,7 @@ program
     .action(list)
     .option('-s, --dueDate', 'Sort by due date') // TODO: not working
     .option('-a, --archived', 'Show archived notes')
+    .option('-t, --today', 'Show today\'s notes')
 
 program
     .command('add')
@@ -399,10 +429,17 @@ program
     .action(saveHtml)
 
 program
+    .command('spriteList')
+    .alias('sp')
+    .description('Create sprite')
+    .action(spriteList)
+
+program
     .option('-i, --id [ids]' , 'Mark a note as done by ids')
     .option('-d, --dueDate', 'Add with due date')
     .option('-s, --sort', 'Sort by due date')
     .option('-a, --archived', 'Show archived notes')
+    .option('-t, --today', 'Show today\'s notes')
 
 
 program.parse();

@@ -1,4 +1,5 @@
 import * as R from 'ramda'
+import terminalImage from 'terminal-image';
 import fetch from 'node-fetch';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -7,8 +8,45 @@ const term = termkit.terminal ;
 const inquirer = require('inquirer');
 inquirer.registerPrompt('datetime', require('inquirer-datepicker-prompt'))
 const say = require('say');
-
+const Jimp = require('jimp');
 // general functions
+
+const jsonToSprite = async (text) => {
+    // get random color
+    const color = Math.floor(Math.random()*16777215).toString(16);
+    // get number of rows in text
+    const rows = text.split('\n').length
+    // get length of longest row
+    const longestRow = text.split('\n').sort((a, b) => b.length - a.length)[0].length
+    const image = new Jimp(longestRow*10, rows*20, color, (err, image) => {
+        if (err) throw err;
+    });
+    Jimp.loadFont(Jimp.FONT_SANS_16_BLACK)
+    .then(font => {
+        text.split('\n').forEach((line, i) => {
+            image.print(font, 0, i * 12, line);
+        })
+    // image.print(font, 10, 10, text, 300, 300);
+    return image
+    }).then(image => {
+    const file = `new_name.${image.getExtension()}`
+    term.brightGreen(`\nSaving image to ${process.cwd()}\\${file}`)
+    return image.write(file);
+    }).then(() => {
+        return terminalImage.file(`${process.cwd()}\\new_name.${image.getExtension()}`, {
+            width: '50%',
+            height: '50%',
+            fit: 'contain',
+            padding: 0,
+            margin: 0,
+            format: 'png',
+            quality: 100
+        })
+    }).then(image => {
+        term(image)
+    })
+}
+
 
 const jsonToHTML = (json) => {
     const columns = [];
@@ -211,6 +249,7 @@ const sortedNotesToday = R.compose(
 )
 
 export {
+    jsonToSprite,
     jsonToHTML,
     sayText,
     stopText,
