@@ -69,6 +69,6 @@ Give a ⭐️ if this project helped you!
 - ~~text to speech~~
 - ~~export to html~~
 - export to sprite
-- today
+- ~~today~~
 - email notifications
 - and many more unnecessary features to make you life more complicated
